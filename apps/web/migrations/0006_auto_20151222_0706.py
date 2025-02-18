@@ -35,11 +35,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='vote',
             name='course',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='web.Course'),
+            field=models.ForeignKey(on_delete=models.CASCADE, to='web.Course'),
         ),
         migrations.AddField(
             model_name='vote',
             name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
     ]

@@ -71,9 +71,9 @@ class Recommendation(models.Model):
         (DOCUMENT_SIMILARITY, "Document Similarity"),
     )
 
-    course = models.ForeignKey("web.Course", related_name="recommendations")
+    course = models.ForeignKey("web.Course", related_name="recommendations", on_delete=models.CASCADE)
     recommendation = models.ForeignKey(
-        "web.Course", related_name="recommenders")
+        "web.Course", related_name="recommenders", on_delete=models.CASCADE)
 
     creator = models.CharField(max_length=16, choices=CREATORS)
     weight = models.FloatField(null=True)
@@ -81,6 +81,6 @@ class Recommendation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} {} -> {}".format(
             self.weight, self.course.short_name(), self.recommendation)

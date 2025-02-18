@@ -46,7 +46,7 @@ class VoteManager(models.Manager):
     def authenticated_group_courses_with_votes(self, courses, category, user):
         # returns a list of tuples: (course, user's corresponding vote or None)
         # if not authenticated, all votes are None
-        if user.is_authenticated():
+        if user.is_authenticated:
             return self.group_courses_with_votes(courses, category, user)
         else:
             return [(c, None) for c in courses]
@@ -103,7 +103,7 @@ class Vote(models.Model):
     class Meta:
         unique_together = ("course", "user", "category")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} {} for {} by {}".format(
             self.category.capitalize(),
             self.vote_type(),

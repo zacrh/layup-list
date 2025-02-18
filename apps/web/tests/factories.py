@@ -1,9 +1,11 @@
 from django.contrib.auth.models import User
 import factory
+from faker import Faker
 from apps.web import models
 from lib import constants
 from django.db.models.signals import post_save
 
+fake = Faker() # create faker instance (lots have change since it was called fake-factory)
 
 class UserFactory(factory.django.DjangoModelFactory):
 
@@ -15,17 +17,15 @@ class UserFactory(factory.django.DjangoModelFactory):
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     is_active = True
+    password = factory.LazyFunction(fake.password) # doesn't work when inside prepare (which is legacy, so we switched to _create), so have to use lazy out here
 
     @classmethod
-    def _prepare(cls, create, **kwargs):
+    def _create(cls, model_class, *args, **kwargs):
         # thanks: https://gist.github.com/mbrochh/2433411
-        password = factory.Faker('password')
-        if 'password' in kwargs:
-            password = kwargs.pop('password')
-        user = super(UserFactory, cls)._prepare(create, **kwargs)
+        password = kwargs.pop('password', fake.password()) # if no password, generate using lazy func from above as fallback
+        user = super()._create(model_class, *args, **kwargs)
         user.set_password(password)
-        if create:
-            user.save()
+        user.save()
         return user
 
 

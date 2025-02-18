@@ -1,8 +1,7 @@
-from __future__ import unicode_literals
 from django.db import models
 from django.db.models import Q
-from course_offering import CourseOffering
-from django.core.urlresolvers import reverse
+from apps.web.models.course_offering import CourseOffering
+from django.urls import reverse
 from lib.constants import CURRENT_TERM
 from lib.terms import numeric_value_of_term
 import re
@@ -25,7 +24,7 @@ class CourseManager(models.Manager):
         query_data = {
             k: v.strip()
             for k, v in self.course_search_regex.match(
-                query).groupdict().iteritems()
+                query).groupdict().items()
         }
 
         department_or_query = query_data["department_or_query"]
@@ -97,7 +96,7 @@ class Course(models.Model):
     class Meta:
         unique_together = ("department", "number", "subnumber")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}: {}".format(self.short_name(), self.title)
 
     def get_absolute_url(self):

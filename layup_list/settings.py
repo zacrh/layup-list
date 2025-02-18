@@ -21,8 +21,6 @@ INSTALLED_APPS = [
     'pipeline',
     'crispy_forms',
     'hijack',
-    'compat',
-    'hijack_admin',
     'django_celery_beat',
     'django_celery_results',
     'apps.analytics',
@@ -31,14 +29,13 @@ INSTALLED_APPS = [
     'apps.web',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

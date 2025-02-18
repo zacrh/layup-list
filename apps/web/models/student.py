@@ -1,10 +1,9 @@
-from __future__ import unicode_literals
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.conf import settings
 from apps.web.models import Review, Vote
 from lib import constants
@@ -53,5 +52,5 @@ class Student(models.Model):
         return (Vote.objects.num_quality_upvotes_for_user(self.user) >=
                 constants.REC_UPVOTE_REQ)
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.user)
