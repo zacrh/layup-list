@@ -84,7 +84,7 @@ u.save()
 If you'd like to have access to the admin panel at `/admin`, also run these before `u.save()`:
 ```python
 u.is_staff = True
-u.is_admin = True
+u.is_superuser = True
 ```
 
 Linting code and Running Tests
