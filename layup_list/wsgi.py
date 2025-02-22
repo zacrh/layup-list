@@ -11,9 +11,6 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "layup_list.settings")
 
 from django.core.wsgi import get_wsgi_application
-from whitenoise import WhiteNoise
 from layup_list.settings import ROOT_ASSETS_DIR
 
 application = get_wsgi_application()
-application = WhiteNoise(application)
-application.add_files(ROOT_ASSETS_DIR)
