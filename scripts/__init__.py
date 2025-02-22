@@ -19,8 +19,8 @@ def crawl_and_import_data(include_orc=False):
     print("Crawling timetable")
     crawl_timetable()
 
-    print("Crawling medians")
-    crawl_medians()
+    print("Not crawling medians since they are no longer publicly available") # Read more: https://www.dartmouth.edu/reg/transcript/medians/#:~:text=The%20revision%20voted%20by%20the%20COI%20on%20May%203%2C%202022%2C%20removed%20the%20original%20implementation%20detail%20that%20stated%20median%20grades%20and%20course%20enrollments%20of%20non%2Dexempt%20courses%20should%20be%20made%20publicly%20available.
+    # crawl_medians()
 
     if include_orc:
         print("Importing ORC")

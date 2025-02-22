@@ -23,11 +23,10 @@ TIMETABLE_URL = (
 
 DATA_TO_SEND = (
     "distribradio=alldistribs&depts=no_value&periods=no_value&"
-    "distribs=no_value&distribs_i=no_value&distribs_wc=no_value&deliverymodes=no_value&pmode=public&"
+    "distribs=no_value&distribs_i=no_value&distribs_wc=no_value&distribs_lang=no_value&deliverymodes=no_value&pmode=public&" # added distribs_lang required parameter (orc returns invalid params if not passed)
     "term=&levl=&fys=n&wrt=n&pe=n&review=n&crnl=no_value&classyear=2008&"
-    "searchtype=Subject+Area%28s%29&termradio=selectterms&terms=no_value&"
+    "searchtype=Subject+Area%28s%29&termradio=selectterms&terms=no_value&terms={term}&" # terms with proper value must be right after `&terms=no_value` or else timetable will be empty
     "deliveryradio=selectdelivery&subjectradio=selectsubjects&hoursradio=allhours&sortorder=dept"
-    "&terms={term}"
 )
 
 COURSE_TITLE_REGEX = re.compile(
@@ -55,18 +54,18 @@ def crawl_timetable(term):
         preprocess=lambda x: re.sub("</tr>", "", x),
     )
     num_columns = len(soup.find(class_="data-table").find_all("th"))
-    assert num_columns == 20
+    assert num_columns == 21 # more than 20 after dartmouth added the lang requirement column
 
     tds = soup.find(class_="data-table").find_all("td")
     assert len(tds) % num_columns == 0
 
     td_generator = (td for td in tds)
-    for _ in xrange(len(tds) / num_columns):
-        tds = [next(td_generator) for _ in xrange(num_columns)]
+    for _ in range(len(tds) // num_columns): # switch to range instead of xrange and `//` instead of `/` for integer division in python 3
+        tds = [next(td_generator) for _ in range(num_columns)]
 
-        number, subnumber = parse_number_and_subnumber(tds[3].get_text())
+        number, subnumber = parse_number_and_subnumber(tds[3].get_text()) # -1 from og index
         crosslisted_courses = _parse_crosslisted_courses(
-            tds[7].get_text(strip=True))
+            tds[7].get_text(strip=True)) # update index to 6 from 7 since i guess the table format is slightly diff now (7 points to the period rather than the xlist'd courses)
 
         title_match = COURSE_TITLE_REGEX.match(tds[5].get_text(strip=True)
             .encode('ascii', 'ignore').decode('ascii'))
@@ -78,29 +77,31 @@ def crawl_timetable(term):
         course_data.append({
             "term": _convert_timetable_term_to_term(
                 tds[0].get_text(strip=True)),
-            # "crn": int(tds[1].get_text(strip=True)),
-            "program": tds[2].get_text(strip=True),
+            # "crn": int(tds[1].get_text(strip=True)), # now when we don't return the CRN the td is completely removed from the response (guess it was just hidden previously)
+            "program": tds[2].get_text(strip=True), # -1 from og index
             "number": number,
             "subnumber": subnumber,
-            "section": int(tds[4].get_text(strip=True)),
+            "section": int(tds[4].get_text(strip=True)), # -1 from og index
             "title": title,
             "delivery_mode": title_match.group(2),
             "crosslisted": crosslisted_courses,
-            "period": tds[8].get_text(strip=True),
-            "room": tds[10].get_text(strip=True),
-            "building": tds[11].get_text(strip=True),
-            "instructor": _parse_instructors(tds[12].get_text(strip=True)),
-            "world_culture": tds[13].get_text(strip=True),
-            "distribs": _parse_distribs(tds[14].get_text(strip=True)),
-            "limit": int_or_none(tds[15].get_text(strip=True)),
-            # "enrollment": int_or_none(tds[16].get_text(strip=True)),
-            "status": tds[17].get_text(strip=True),
+            "period": tds[8].get_text(strip=True), # -1 from og index
+            "room": tds[10].get_text(strip=True), # -1 from og index
+            "building": tds[11].get_text(strip=True), # -1 from og index
+            "instructor": _parse_instructors(tds[12].get_text(strip=True)), # -1 from og index
+            "world_culture": tds[13].get_text(strip=True), # -1 from og index
+            "distribs": _parse_distribs(tds[14].get_text(strip=True)), # -1 from og index
+            # "langreq": tds[15].get_text(strip=True)), # language requirement, new in the timetable, haven't added to models yet
+            "limit": int_or_none(tds[16].get_text(strip=True)),
+            # "enrollment": int_or_none(tds[17].get_text(strip=True)),
+            "status": tds[18].get_text(strip=True),
         })
     return course_data
 
 
 def _parse_crosslisted_courses(xlist_text):
     crosslisted_courses = []
+    print("XLIST", xlist_text)
     for course_text in (xlist_text.split(",") if xlist_text else []):
         program, numbers, section = course_text.split()
         number, subnumber = parse_number_and_subnumber(numbers)

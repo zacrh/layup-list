@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'pipeline',
     'crispy_forms',
+    'crispy_bootstrap3',
     'hijack',
     'django_celery_beat',
     'django_celery_results',

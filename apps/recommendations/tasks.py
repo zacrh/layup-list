@@ -98,7 +98,7 @@ def generate_course_description_similarity_recommendations():
     # zero out crosslistings and same titles, so only one rep for each
     # crosslisting
     covered_ids = set()
-    for i in xrange(psarray.shape[1]):
+    for i in range(psarray.shape[1]):
         if i in covered_ids:
             continue
         course_id = course_ids[i]
@@ -116,7 +116,7 @@ def generate_course_description_similarity_recommendations():
         covered_ids.add(i)
 
     recommendations_to_create = []
-    for i in xrange(psarray.shape[0]):
+    for i in range(psarray.shape[0]):
         current_class = Course.objects.get(id=course_ids[i])
 
         # zero out the diagonal

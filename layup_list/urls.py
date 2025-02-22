@@ -74,23 +74,23 @@ urlpatterns = [
     re_path(r'^accounts/confirmation$', views.confirmation, name="confirmation"),
 
     # password resets
-    re_path(r'^accounts/password/reset/$', authviews.password_reset,
-        {
-            'post_reset_redirect': '/accounts/password/reset/done/',
-            'template_name': 'password_reset_form.html',
-            'html_email_template_name': 'password_reset_email.html',
-            'email_template_name': 'password_reset_email.html',
-        },
-        name="password_reset"),
-    re_path(r'^accounts/password/reset/done/$', authviews.password_reset_done,
-        {'template_name': 'password_reset_done.html'}),
-    re_path(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
-        authviews.password_reset_confirm,
-        {
-            'post_reset_redirect': '/accounts/password/done/',
-            'template_name': 'password_reset_confirm.html'
-        },
-        name="password_reset_confirm"),
-    re_path(r'^accounts/password/done/$', authviews.password_reset_complete,
-        {'template_name': 'password_reset_complete.html'}),
+    # re_path(r'^accounts/password/reset/$', authviews.password_reset,
+    #     {
+    #         'post_reset_redirect': '/accounts/password/reset/done/',
+    #         'template_name': 'password_reset_form.html',
+    #         'html_email_template_name': 'password_reset_email.html',
+    #         'email_template_name': 'password_reset_email.html',
+    #     },
+    #     name="password_reset"),
+    # re_path(r'^accounts/password/reset/done/$', authviews.password_reset_done,
+    #     {'template_name': 'password_reset_done.html'}),
+    # re_path(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+    #     authviews.password_reset_confirm,
+    #     {
+    #         'post_reset_redirect': '/accounts/password/done/',
+    #         'template_name': 'password_reset_confirm.html'
+    #     },
+    #     name="password_reset_confirm"),
+    # re_path(r'^accounts/password/done/$', authviews.password_reset_complete,
+    #     {'template_name': 'password_reset_complete.html'}),
 ]

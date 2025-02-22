@@ -1,5 +1,5 @@
 {% load static %}
-{% load hijack_tags %}
+{% load hijack %}
 {% load pipeline %}
 <!doctype html>
 <html class="no-js" lang="">
@@ -28,7 +28,12 @@
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        {% hijack_notification %}
+        {% if request.user.is_hijacked %}
+            <div class="alert alert-warning">
+                You are currently hijacking another user.
+                <a href="{% url 'hijack:release_hijack' %}">Release</a>
+            </div>
+        {% endif %}
 
         <div class="container-and-footer">
             <div class="container">
