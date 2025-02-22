@@ -21,7 +21,16 @@
                 <tr>
                     <td>{{ vote_count }}</td>
                     <td>{{ user }}</td>
-                    <td><a href="/hijack/{{ user_id }}">Hijack {{ user }}</a></td>
+                    <td>
+                        <form action="{% url 'hijack:acquire' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_pk" value="{{ user_id }}">
+                            <button type="submit">Hijack {{ user }}</button>
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                        </form>
+
+                        <!-- <a href="/hijack/{{ user_id }}">Hijack {{ user }}</a> -->
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

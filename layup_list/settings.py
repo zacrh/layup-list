@@ -32,7 +32,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware", # add whitenoise to middleware (correct whitenoise configuration in django 5)
+    'whitenoise.middleware.WhiteNoiseMiddleware', # add whitenoise to middleware (correct whitenoise configuration in django 5)
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -40,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'hijack.middleware.HijackUserMiddleware', # add hijack middleware; now required in django hijack 3.7+
 ]
 
 ROOT_URLCONF = 'layup_list.urls'

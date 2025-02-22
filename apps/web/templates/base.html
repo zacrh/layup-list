@@ -29,9 +29,15 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         {% if request.user.is_hijacked %}
-            <div class="alert alert-warning">
+            <div class="alert alert-warning" style="display: flex; gap: 1rem; align-items: center;">
                 You are currently hijacking another user.
-                <a href="{% url 'hijack:release_hijack' %}">Release</a>
+
+                <form action="{% url 'hijack:release' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_pk" value="{{ user_id }}">
+                    <button type="submit">Release</button>
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                </form>
             </div>
         {% endif %}
 
