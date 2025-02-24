@@ -133,6 +133,9 @@ PIPELINE = {
         }
     }
 }
+PIPELINE.update({
+    'YUGLIFY_BINARY': os.path.join(BASE_DIR, 'node_modules/.bin/yuglify'),
+})
 
 
 # Email server
