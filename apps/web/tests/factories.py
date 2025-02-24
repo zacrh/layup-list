@@ -4,6 +4,7 @@ from faker import Faker
 from apps.web import models
 from lib import constants
 from django.db.models.signals import post_save
+from lib.utils import make_random_password # our own make_random_password method since django no longer has one after 5.1 (https://django.readthedocs.io/en/stable/releases/5.1.html#:~:text=The%20BaseUserManager.make_random_password()%20method%20is%20removed.)
 
 fake = Faker() # create faker instance (lots have change since it was called fake-factory)
 
@@ -81,7 +82,7 @@ class StudentFactory(factory.django.DjangoModelFactory):
         model = models.Student
 
     user = factory.SubFactory(UserFactory)
-    confirmation_link = User.objects.make_random_password(length=16)
+    confirmation_link = make_random_password(length=16) # django 5 random password generation (User.objects.make_random_password is deprecated)
 
 
 class VoteFactory(factory.django.DjangoModelFactory):
