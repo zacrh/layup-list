@@ -32,8 +32,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # add whitenoise to middleware (correct whitenoise configuration in django 5)
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # add whitenoise to middleware (correct whitenoise configuration in django 5)
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -88,13 +88,14 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STATICFILES_STORAGE = 'pipeline.storage.PipelineManifestStorage' # changed from pipeline.storage.PipelineCachedStorage
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage' # changed from pipeline.storage.PipelineCachedStorage
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'pipeline.finders.PipelineFinder',
 )
 ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
+PIPELINE_ENABLED = True
 PIPELINE = {
     'COMPILERS': (
         'react.utils.pipeline.JSXCompiler',
