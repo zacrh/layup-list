@@ -97,7 +97,6 @@ STATICFILES_FINDERS = (
 ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
 PIPELINE_COLLECTSTATIC = True
 PIPELINE = {
-    'PIPELINE_ENABLED': True,
     'COMPILERS': (
         'react.utils.pipeline.JSXCompiler',
     ),
