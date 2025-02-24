@@ -101,7 +101,6 @@ def crawl_timetable(term):
 
 def _parse_crosslisted_courses(xlist_text):
     crosslisted_courses = []
-    print("XLIST", xlist_text)
     for course_text in (xlist_text.split(",") if xlist_text else []):
         program, numbers, section = course_text.split()
         number, subnumber = parse_number_and_subnumber(numbers)
