@@ -88,8 +88,7 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-# STATICFILES_STORAGE = 'pipeline.storage.PipelineManifestStorage' # changed from pipeline.storage.PipelineCachedStorage
-STORAGES = {
+STORAGES = { # STATICFILES_STORAGE was fully deprecated in django v5.1, with this being the documentation's new recommended way to configure storage. (django-pipeline's documentation is outdated and still says to use STATICFILES_STORAGE; there's an open issue about this with updated instructions: https://github.com/jazzband/django-pipeline/issues/831)
     'default': {
         'BACKEND': 'django.core.files.storage.FileSystemStorage', # Django's default is 'django.core.files.storage.FileSystemStorage'
     },
@@ -139,7 +138,6 @@ PIPELINE = {
         }
     }
 }
-# PIPELINE['PIPELINE_ENABLED'] = False # do this for now until I figure out how to get pipeline to actually output the files
 
 
 # Email server
