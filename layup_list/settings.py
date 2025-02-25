@@ -88,14 +88,13 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage' # changed from pipeline.storage.PipelineCachedStorage
+STATICFILES_STORAGE = 'pipeline.storage.PipelineManifestStorage' # changed from pipeline.storage.PipelineCachedStorage
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'pipeline.finders.PipelineFinder',
 )
 ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
-PIPELINE_COLLECTSTATIC = True
 PIPELINE = {
     'COMPILERS': (
         'react.utils.pipeline.JSXCompiler',
@@ -134,6 +133,7 @@ PIPELINE = {
         }
     }
 }
+PIPELINE['PIPELINE_ENABLED'] = False # do this for now until I figure out how to get pipeline to actually output the files
 
 
 # Email server
