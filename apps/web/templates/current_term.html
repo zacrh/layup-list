@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-9">
         <h1>{{ term }} {{ course_type }}</h1>
     </div>
-    <div class="col-md-2 text-right">
+    <div class="col-md-3 text-right">
         <form class="form-inline">
-            <div class="form-group">
-              <label class="sr-only" for="distributive">Distrib:</label>
-              <select name="dist" class="form-control" onchange="this.form.submit()">
+            <div class="form-group input-group">
+              <label class="sr-only input-group-text" for="distributive">Distrib:</label>
+              <select name="dist" class="form-control form-select" onchange="this.form.submit()">
                   <option value="">Filter by distrib</option>
                   {% for distrib in distribs %}
                       <option value="{{ distrib.name.lower }}">{{ distrib.name.upper }}</option>
@@ -34,16 +34,16 @@
                 <tr>
                     <td class="text-center">
                         <span class="vote-arrow glyphicon glyphicon-chevron-up {% if vote and vote.is_upvote %}selected{% else %}unselected{% endif %}"
-                              onclick="LayupList.Web.CurrentTerm.upvote({{ course.id }}, this);"></span>
+                              onclick="LayupList.Web.CurrentTerm.upvote({{ course.id }}, this);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg></span>
                         {% if sort == "best" %}
                             <h2 class="score">{{ course.quality_score }}</h2>
                         {% else %}
                             <h2 class="score">{{ course.difficulty_score }}</h2>
                         {% endif %}
                         <span class="vote-arrow glyphicon glyphicon-chevron-down {% if vote and vote.is_downvote %}selected{% else %}unselected{% endif %}"
-                              onclick="LayupList.Web.CurrentTerm.downvote({{ course.id }}, this);"></span>
+                              onclick="LayupList.Web.CurrentTerm.downvote({{ course.id }}, this);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg></span>
                     </td>
-                    <td>
+                    <td class="align-middle">
                         {% include "components/course_summary.html" with course=course only %}
                     </td>
                 </tr>
@@ -53,20 +53,33 @@
     </div>
 </div>
 <nav>
-    <ul class="pager">
+    <ul class="pagination justify-content-center">
         {% if courses.has_previous %}
-            <li><a href="{% url 'current_term' sort %}?page={{ courses.previous_page_number }}&dist={{ request.GET.dist }}"><span aria-hidden="true">&larr;</span> Previous</a></li>
+            <li class="page-item">
+                <a class="page-link" href="{% url 'current_term' sort %}?page={{ courses.previous_page_number }}&dist={{ request.GET.dist }}">
+                    <span aria-hidden="true">&larr;</span> Previous
+                </a>
+            </li>
         {% else %}
-            <li class="disabled"><a><span aria-hidden="true">&larr;</span> Previous</a></li>
+            <li class="page-item disabled">
+                <a class="page-link"><span aria-hidden="true">&larr;</span> Previous</a>
+            </li>
         {% endif %}
 
-        <li>{{ courses.number }} of {{ courses.paginator.num_pages }}</li>
+        <li class="page-item disabled bg-light"><a class="page-link bg-light">{{ courses.number }} of {{ courses.paginator.num_pages }}</a></li>
 
         {% if courses.has_next %}
-            <li><a href="{% url 'current_term' sort %}?page={{ courses.next_page_number }}&dist={{ request.GET.dist }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+            <li class="page-item">
+                <a class="page-link" href="{% url 'current_term' sort %}?page={{ courses.next_page_number }}&dist={{ request.GET.dist }}">
+                    Next <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
         {% else %}
-            <li class="disabled"><a>Next <span aria-hidden="true">&rarr;</span></a></li>
+            <li class="page-item disabled">
+                <a class="page-link">Next <span aria-hidden="true">&rarr;</span></a>
+            </li>
         {% endif %}
     </ul>
+
 </nav>
 {% endblock %}
