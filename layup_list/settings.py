@@ -97,7 +97,7 @@ STATICFILES_FINDERS = (
 ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
 PIPELINE = {
     'COMPILERS': (
-        'react.utils.pipeline.JSXCompiler',
+        'pipeline.compilers.coffee.CoffeeScriptCompiler',
     ),
     'YUGLIFY_BINARY': os.path.join(BASE_DIR, 'node_modules/.bin/yuglify'),
     'YUI_BINARY': os.path.join(BASE_DIR, 'node_modules/.bin/yuicompressor'),
