@@ -88,7 +88,15 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STATICFILES_STORAGE = 'pipeline.storage.PipelineManifestStorage' # changed from pipeline.storage.PipelineCachedStorage
+# STATICFILES_STORAGE = 'pipeline.storage.PipelineManifestStorage' # changed from pipeline.storage.PipelineCachedStorage
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage', # Django's default is 'django.core.files.storage.FileSystemStorage'
+    },
+    'staticfiles': {
+        'BACKEND': 'pipeline.storage.PipelineManifestStorage',
+    },
+}
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -97,10 +105,8 @@ STATICFILES_FINDERS = (
 ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
 PIPELINE = {
     'COMPILERS': (
-        'pipeline.compilers.coffee.CoffeeScriptCompiler',
+        'react.utils.pipeline.JSXCompiler',
     ),
-    'YUGLIFY_BINARY': os.path.join(BASE_DIR, 'node_modules/.bin/yuglify'),
-    'YUI_BINARY': os.path.join(BASE_DIR, 'node_modules/.bin/yuicompressor'),
     'JAVASCRIPT': {
         'app': {
             'source_filenames': (
@@ -133,7 +139,7 @@ PIPELINE = {
         }
     }
 }
-PIPELINE['PIPELINE_ENABLED'] = False # do this for now until I figure out how to get pipeline to actually output the files
+# PIPELINE['PIPELINE_ENABLED'] = False # do this for now until I figure out how to get pipeline to actually output the files
 
 
 # Email server
