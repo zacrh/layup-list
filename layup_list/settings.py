@@ -111,7 +111,7 @@ PIPELINE = {
         'app': {
             'source_filenames': (
                 'js/plugins.js',
-                'js/vendor/jquery.highlight-5.js',
+                'js/vendor/jquery.highlight.js',
                 'js/web/base.jsx',
                 'js/web/common.jsx',
                 'js/web/landing.jsx',
