@@ -25,6 +25,13 @@ popd
 # **Ensure the target directory exists before creating symlinks**
 mkdir -p ".heroku/python/bin"
 
+# Update PATH for Node.js and npm
+export PATH="$BUILD_DIR/.heroku/vendor/node/bin:$PATH"
+
 ln -s -f ../../vendor/node/bin/node .heroku/python/bin/node
 ln -s -f ../../vendor/node/bin/node-waf .heroku/python/bin/node-waf
 ln -s -f ../../vendor/node/bin/npm .heroku/python/bin/npm
+
+# Print the npm version to verify it's installed
+echo "Node.js version: $(node -v)"
+echo "npm version: $(npm -v)"

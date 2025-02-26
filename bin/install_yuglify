@@ -2,7 +2,10 @@
 set -eo pipefail
 
 mkdir -p "$BUILD_DIR/.heroku/vendor"
-export NPM_CONFIG_PREFIX="$BUILD_DIR/.heroku/vendor"
+# export NPM_CONFIG_PREFIX="$BUILD_DIR/.heroku/vendor"
+
+# Ensure npm is available
+export PATH="$BUILD_DIR/.heroku/vendor/node/bin:$PATH"
 
 npm install -g yuglify
 
