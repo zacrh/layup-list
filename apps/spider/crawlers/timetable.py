@@ -78,23 +78,23 @@ def crawl_timetable(term):
             "term": _convert_timetable_term_to_term(
                 tds[0].get_text(strip=True)),
             # "crn": int(tds[1].get_text(strip=True)), # now when we don't return the CRN the td is completely removed from the response (guess it was just hidden previously)
-            "program": tds[2].get_text(strip=True), # -1 from og index
+            "program": tds[2].get_text(strip=True),
             "number": number,
             "subnumber": subnumber,
-            "section": int(tds[4].get_text(strip=True)), # -1 from og index
+            "section": int(tds[4].get_text(strip=True)),
             "title": title,
             "delivery_mode": title_match.group(2),
             "crosslisted": crosslisted_courses,
-            "period": tds[8].get_text(strip=True), # -1 from og index
-            "room": tds[10].get_text(strip=True), # -1 from og index
-            "building": tds[11].get_text(strip=True), # -1 from og index
-            "instructor": _parse_instructors(tds[12].get_text(strip=True)), # -1 from og index
-            "world_culture": tds[13].get_text(strip=True), # -1 from og index
-            "distribs": _parse_distribs(tds[14].get_text(strip=True)), # -1 from og index
+            "period": tds[8].get_text(strip=True),
+            "room": tds[10].get_text(strip=True),
+            "building": tds[11].get_text(strip=True),
+            "instructor": _parse_instructors(tds[12].get_text(strip=True)),
+            "world_culture": tds[13].get_text(strip=True),
+            "distribs": _parse_distribs(tds[14].get_text(strip=True)),
             # "langreq": tds[15].get_text(strip=True)), # language requirement, new in the timetable, haven't added to models yet
-            "limit": int_or_none(tds[16].get_text(strip=True)),
+            "limit": int_or_none(tds[16].get_text(strip=True)), # +1 from og index
             # "enrollment": int_or_none(tds[17].get_text(strip=True)),
-            "status": tds[18].get_text(strip=True),
+            "status": tds[18].get_text(strip=True), # +1 from og index
         })
     return course_data
 
