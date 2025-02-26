@@ -92,14 +92,15 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STORAGES = { # STATICFILES_STORAGE was fully deprecated in django v5.1, with this being the documentation's new recommended way to configure storage. (django-pipeline's documentation is outdated and still says to use STATICFILES_STORAGE; there's an open issue about this with updated instructions: https://github.com/jazzband/django-pipeline/issues/831)
-    'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage', # Django's default is 'django.core.files.storage.FileSystemStorage'
-    },
-    'staticfiles': {
-        'BACKEND': 'pipeline.storage.PipelineManifestStorage',
-    },
-}
+STATICFILES_STORAGE="pipeline.storage.PipelineManifestStorage"
+# STORAGES = { # STATICFILES_STORAGE was fully deprecated in django v5.1, with this being the documentation's new recommended way to configure storage. (django-pipeline's documentation is outdated and still says to use STATICFILES_STORAGE; there's an open issue about this with updated instructions: https://github.com/jazzband/django-pipeline/issues/831)
+#     'default': {
+#         'BACKEND': 'django.core.files.storage.FileSystemStorage', # Django's default is 'django.core.files.storage.FileSystemStorage'
+#     },
+#     'staticfiles': {
+#         'BACKEND': 'pipeline.storage.PipelineManifestStorage',
+#     },
+# }
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
