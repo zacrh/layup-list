@@ -22,6 +22,9 @@ rm -rf node
 mv $tempdir/$NODE_BASENAME node
 popd
 
+# **Ensure the target directory exists before creating symlinks**
+mkdir -p ".heroku/python/bin"
+
 ln -s -f ../../vendor/node/bin/node .heroku/python/bin/node
 ln -s -f ../../vendor/node/bin/node-waf .heroku/python/bin/node-waf
 ln -s -f ../../vendor/node/bin/npm .heroku/python/bin/npm
