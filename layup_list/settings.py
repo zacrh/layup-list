@@ -142,6 +142,7 @@ PIPELINE = {
         }
     }
 }
+PIPELINE['PIPELINE_ENABLED'] = False
 
 
 # Email server

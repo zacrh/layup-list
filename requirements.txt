@@ -10,7 +10,7 @@ celery==5.4.0
 certifi==2020.6.20
 chardet==3.0.4
 configparser==4.0.2
-crispy-bootstrap5==2024.2
+crispy-bootstrap5==2024.10
 decorator==4.0.10
 dj-database-url==2.3.0
 Django==5.1.6
