@@ -110,7 +110,7 @@ PIPELINE = {
     'COMPILERS': (
         'react.utils.pipeline.JSXCompiler',
     ),
-    'YUGLIFY_BINARY': os.path.join(BASE_DIR, '.heroku/vendor/node/bin/yuglify'),
+    'YUGLIFY_BINARY': os.path.join(BASE_DIR, '../.heroku/vendor/node/bin/yuglify'),
     'JAVASCRIPT': {
         'app': {
             'source_filenames': (
