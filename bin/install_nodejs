@@ -23,7 +23,7 @@ mv $tempdir/$NODE_BASENAME node
 popd
 
 # **Ensure the target directory exists before creating symlinks**
-mkdir -p ".heroku/python/bin"
+mkdir -p "$BUILD_DIR/.heroku/python/bin"
 
 # Update PATH for Node.js and npm
 export PATH="$BUILD_DIR/.heroku/vendor/node/bin:$PATH"
