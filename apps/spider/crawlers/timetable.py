@@ -65,7 +65,7 @@ def crawl_timetable(term):
 
         number, subnumber = parse_number_and_subnumber(tds[3].get_text()) # -1 from og index
         crosslisted_courses = _parse_crosslisted_courses(
-            tds[7].get_text(strip=True)) # update index to 6 from 7 since i guess the table format is slightly diff now (7 points to the period rather than the xlist'd courses)
+            tds[7].get_text(strip=True))
 
         title_match = COURSE_TITLE_REGEX.match(tds[5].get_text(strip=True)
             .encode('ascii', 'ignore').decode('ascii'))
@@ -77,7 +77,7 @@ def crawl_timetable(term):
         course_data.append({
             "term": _convert_timetable_term_to_term(
                 tds[0].get_text(strip=True)),
-            # "crn": int(tds[1].get_text(strip=True)), # now when we don't return the CRN the td is completely removed from the response (guess it was just hidden previously)
+            # "crn": int(tds[1].get_text(strip=True)),
             "program": tds[2].get_text(strip=True),
             "number": number,
             "subnumber": subnumber,
