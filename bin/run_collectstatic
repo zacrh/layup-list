@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+# Ensure yuglify is in PATH
+export PATH="/app/.heroku/vendor/node/bin:$PATH"
+
 indent() {
     RE="s/^/       /"
     [ $(uname) == "Darwin" ] && sed -l "$RE" || sed -u "$RE"
