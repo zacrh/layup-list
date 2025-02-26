@@ -9,7 +9,7 @@ Feel free to email <a href="mailto:support@layuplist.com">support@layuplist.com<
 Local Setup (macOS or OS X)
 -----------------
 #### Installation
-* Use Python 2.7.16
+* Use Python 3.11.4 (any 3.11 version should work).
 * Install [Homebrew](http://brew.sh/), [node.js](https://nodejs.org/en/), and Postgres (we recommend [Postgres.app](http://postgresapp.com/) with their [CLI Tools](http://postgresapp.com/documentation/cli-tools.html)).
 * Install the [Heroku CLI](https://cli.heroku.com). You don't need a Heroku account, they just offer good tools for configuration.
 * Install Redis using `brew install redis`.
@@ -18,23 +18,23 @@ Local Setup (macOS or OS X)
 * Run `easy_install pip` if you do not have pip.
 * Run `pip install virtualenv` if you do not have virtualenv.
 * Run `virtualenv venv` to create a Python virtual environment.
-* Run `createdb layuplist`.
+* Run `createdb layuplist` (installed with Postgres.app's [CLI Tools](https://postgresapp.com/documentation/cli-tools.html) in step 2)
 * [Clone](https://help.github.com/articles/cloning-a-repository/) the main repository. `git clone https://github.com/layuplist/layup-list.git`.
 * Create a `.env` file in the root directory of the repository (fill out the items in brackets):
 
   ```bash
   DATABASE_URL=postgres://[YOUR_USERNAME]@localhost:5432/layuplist
   REDIS_URL=redis://[YOUR_USERNAME]@localhost:6379
-  SECRET_KEY=[SOME_LONG_RANDOM_STRING]
+  SECRET_KEY=[SOME_LONG_RANDOM_STRING] # generate one at https://generate-secret.vercel.app/64
   DEBUG=True
-  CURRENT_TERM=20X
+  CURRENT_TERM=25S
   OFFERINGS_THRESHOLD_FOR_TERM_UPDATE=100
   ```
 
 * Run `source ./scripts/dev/environment.sh` to set up the heroku development environment.
 * Run `source ./scripts/dev/virtualize.sh` to activate the virtual environment.
 * Install Python dependencies using `pip install -r requirements.txt`.
-* Initialize the database with `python manage.py migrate`.
+* Initialize the database with `python manage.py migrate` (must have Postgres running, see below).
 
 Developing
 ----------
