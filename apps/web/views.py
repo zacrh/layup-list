@@ -40,10 +40,10 @@ from lib import constants
 import uuid
 from google.cloud import pubsub_v1
 
-# pub_sub_publisher = pubsub_v1.PublisherClient()
-# topic_paths = {
-#     'course-views': pub_sub_publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views')
-# }
+pub_sub_publisher = pubsub_v1.PublisherClient()
+topic_paths = {
+    'course-views': pub_sub_publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views')
+}
 
 LIMITS = {
     'courses': 20,
@@ -217,17 +217,13 @@ def course_detail(request, course_id):
         course = Course.objects.get(pk=course_id)
         prior_course_id = get_prior_course_id(request, course_id)
         if prior_course_id is not None:
-            pass
-            # result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, priorCourseID=prior_course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat(), source='ll', dataVersion='1')
+            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, priorCourseID=prior_course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat(), source='ll', dataVersion='1')
         else:
-            pass
-            # result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat(), source='ll', dataVersion='1')
+            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat(), source='ll', dataVersion='1')
         try:
-            pass
-            # result.result()
+            result.result()
         except:
-            pass
-            # print('Error publishing view activity for ', course_id)
+            print('Error publishing view activity for ', course_id)
     except Course.DoesNotExist:
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
