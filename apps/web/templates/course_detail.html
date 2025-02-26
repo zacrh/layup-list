@@ -14,26 +14,26 @@
             <p>
                 Crosslisted with
                 {% for x in xlist %}
-                    <a href="{{ x.get_absolute_url }}" class="link-primary link-offset-1 link-underline-opacity-0 link-underline-opacity-75-hover">{{ x.short_name }}</a>
+                    <a href="{{ x.get_absolute_url }}">{{ x.short_name }}</a>
                 {% endfor %}
             </p>
         {% endif %}
-        {% if course.url %} <p><a href="{{ course.url }}" class="link-primary text-primary-emphasis link-offset-1 link-underline-opacity-0 link-underline-opacity-75-hover">View on ORC.</a></p> {% endif %}
+        {% if course.url %} <p><a href="{{ course.url }}">View on ORC.</a></p> {% endif %}
         {% if distribs_string %} <p> Distribs: {{ distribs_string }} </p> {% endif %}
     </div>
 </div>
 <div class="row">
-    <div class="col-md-2 offset-md-2 text-center score-box bg-light">
+    <div class="col-md-2 col-md-offset-2 text-center score-box">
         <span class="vote-arrow glyphicon glyphicon-chevron-up {% if quality_vote and quality_vote.is_upvote %}selected{% else %}unselected{% endif %}"
-        onclick="LayupList.Web.CourseDetail.upvote({{ course.id }}, this, false);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg></span>
+        onclick="LayupList.Web.CourseDetail.upvote({{ course.id }}, this, false);"></span>
         <h2 class="score"> {{ course.quality_score }} </h2>
         <span class="vote-arrow glyphicon glyphicon-chevron-down {% if quality_vote and quality_vote.is_downvote %}selected{% else %}unselected{% endif %}"
-        onclick="LayupList.Web.CourseDetail.downvote({{ course.id }}, this, false);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg></span>
+        onclick="LayupList.Web.CourseDetail.downvote({{ course.id }}, this, false);"></span>
         <p>said it was good</p>
     </div>
-    <div class="col-md-2 offset-md-4 text-center score-box bg-light">
+    <div class="col-md-2 col-md-offset-4 text-center score-box">
         <span class="vote-arrow glyphicon glyphicon-chevron-up {% if difficulty_vote and difficulty_vote.is_upvote %}selected{% else %}unselected{% endif %}"
-              onclick="LayupList.Web.CourseDetail.upvote({{ course.id }}, this, true);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg></span>
+              onclick="LayupList.Web.CourseDetail.upvote({{ course.id }}, this, true);"></span>
         {% if request.user.is_authenticated %}
             <h2 class="score"> {{ course.difficulty_score }} </h2>
         {% else %}
@@ -42,7 +42,7 @@
             </p>
         {% endif %}
         <span class="vote-arrow glyphicon glyphicon-chevron-down {% if difficulty_vote and difficulty_vote.is_downvote %}selected{% else %}unselected{% endif %}"
-              onclick="LayupList.Web.CourseDetail.downvote({{ course.id }}, this, true);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg></span>
+              onclick="LayupList.Web.CourseDetail.downvote({{ course.id }}, this, true);"></span>
         <p>called it a layup</p>
     </div>
 </div>
@@ -76,7 +76,7 @@
                 {% for professor, review_count in professors_and_review_count %}
                     <tr onclick="window.document.location='{% url 'course_review_search' course.id %}?q={{ professor }}';" role="button">
                         <td>
-                            <a class="link-primary text-primary-emphasis link-offset-1 link-underline-opacity-0 link-underline-opacity-75-hover">
+                            <a>
                                 {{ professor }}
                             </a>
                         </td>
@@ -92,15 +92,17 @@
 <div id="reviews" class="row">
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <h3>Reviews ({{ reviews.paginator.count }})</h3>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <form class="course-review-search" action="{% url 'course_review_search' course.id %}" method="get" role="search">
                     <div class="form-group">
                         <div class="input-group">
                             <input name="q" type="text" class="form-control" placeholder="Search reviews and professors">
-                            <button type="submit" class="btn btn-light light-btn-outline">Search</button>
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default">Search</button>
+                            </span>
                         </div>
                     </div>
                 </form>
@@ -121,31 +123,19 @@
             </tbody>
         </table>
         <nav>
-            <ul class="pagination justify-content-center">
+            <ul class="pager">
                 {% if reviews.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="{% url 'course_detail' course.id %}?page={{ reviews.previous_page_number }}#reviews">
-                            <span aria-hidden="true">&larr;</span> Previous
-                        </a>
-                    </li>
+                    <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.previous_page_number }}#reviews"><span aria-hidden="true">&larr;</span> Previous</a></li>
                 {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link"><span aria-hidden="true">&larr;</span> Previous</a>
-                    </li>
+                    <li class="disabled"><a><span aria-hidden="true">&larr;</span> Previous</a></li>
                 {% endif %}
-        
-                <li class="page-item disabled bg-light"><a class="page-link bg-light">{{ reviews.number }} of {{ reviews.paginator.num_pages }}</a></li>
-        
+
+                <li>{{ reviews.number }} of {{ reviews.paginator.num_pages }}</li>
+
                 {% if reviews.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="{% url 'course_detail' course.id %}?page={{ reviews.next_page_number }}#reviews">
-                            Next <span aria-hidden="true">&rarr;</span>
-                        </a>
-                    </li>
+                    <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.next_page_number }}#reviews">Next <span aria-hidden="true">&rarr;</span></a></li>
                 {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link">Next <span aria-hidden="true">&rarr;</span></a>
-                    </li>
+                    <li class="disabled"><a>Next <span aria-hidden="true">&rarr;</span></a></li>
                 {% endif %}
             </ul>
         </nav>
@@ -185,8 +175,8 @@
                 {% load crispy_forms_tags %}
                 {% csrf_token %}
                 {{ review_form|crispy }}
-                <div class="text-end">
-                    <input type="submit" class="btn btn-light light-btn-outline mt-2" value="Submit" />
+                <div class="text-right">
+                    <input type="submit" class="btn btn-default" value="Submit" />
                 </div>
             </form>
         {% else %}

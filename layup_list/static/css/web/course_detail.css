@@ -26,10 +26,10 @@
 }
 
 .score-box {
-    border: var(--bs-border-width) solid var(--bs-border-color);
-    border-radius: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 
 .course-review-search {
-    margin-bottom: 10px;
+    margin-top: 10px;
 }

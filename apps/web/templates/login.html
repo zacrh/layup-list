@@ -15,21 +15,15 @@
         </div>
     </div>
     <div class="row"></div>
-    <div class="col-md-4 offset-md-4">
+    <div class="col-md-2 col-md-offset-5">
         <div class="text-center">
             <form method="post">
                 {% csrf_token %}
-                <!-- <div class="input-group"> -->
-                    <!-- <label class="input-group-text" for="email">Email</label> -->
-                    <label for="email">Email</label>
-                    <input id="login-email" class="form-control" type="text" name="email" value="" placeholder="Robert.L.Frost.96@dartmouth.edu">
-                <!-- </div> -->
+                <label for="email">Email: </label>
+                <input id="login-email" class="form-control" type="text" name="email" value="">
                 <br>
-                <!-- <div class="input-group"> -->
-                    <!-- <label class="input-group-text" for="password">Password</label> -->
-                    <label for="password">Password</label>
-                    <input id="login-password" class="form-control" type="password" name="password" value="">
-                <!-- </div> -->
+                <label for="password">Password: </label>
+                <input id="login-password" class="form-control" type="password" name="password" value="">
                 <br>
                 <input type="submit" class="btn btn-primary" value="Submit">
                 <br>

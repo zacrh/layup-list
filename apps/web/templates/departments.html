@@ -13,8 +13,8 @@
             <tbody>
                 {% for code, name, count in departments %}
                 <tr onclick="window.document.location='{% url 'course_search' %}?q={{ code }}';" role="button">
-                    <td><a class="link-primary text-primary-emphasis link-offset-1 link-underline-opacity-0 link-underline-opacity-75-hover">{{ code }}</a></td>
-                    <td>{% if name %}<a class="link-primary text-primary-emphasis link-offset-1 link-underline-opacity-0 link-underline-opacity-75-hover">{{ name }}</a>{% endif %}</td>
+                    <td><a>{{ code }}</a></td>
+                    <td>{% if name %}<a>{{ name }}</a>{% endif %}</td>
                     <td>{{ count }}</td>
                 </tr>
                 {% endfor %}

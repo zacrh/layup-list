@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'pipeline',
     'crispy_forms',
-    'crispy_bootstrap5',
+    'crispy_bootstrap3',
     'hijack',
     'django_celery_beat',
     'django_celery_results',
@@ -83,10 +83,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
-# Crispy Forms configuration (necessary when using bootstrap5)
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Static files
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
