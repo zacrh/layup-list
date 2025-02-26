@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+# make sure we have a build directory
 mkdir -p "$BUILD_DIR/.heroku/vendor"
-# export NPM_CONFIG_PREFIX="$BUILD_DIR/.heroku/vendor"
 
-# Ensure npm is available
+# make sure npm is available — should be
 export PATH="$BUILD_DIR/.heroku/vendor/node/bin:$PATH"
 
 npm install -g yuglify
 
-# Ensure Yuglify is in the path
+# add to path
 export PATH="$BUILD_DIR/.heroku/vendor/bin:$PATH"
 echo "Yuglify installed at: $(which yuglify)"

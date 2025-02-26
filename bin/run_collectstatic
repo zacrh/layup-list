@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-# Ensure yuglify is in PATH
-export PATH="/app/.heroku/vendor/node/bin:$PATH"
+# make sure node is in path
+export PATH="/layup_list/.heroku/vendor/node/bin:$PATH"
 
 indent() {
     RE="s/^/       /"

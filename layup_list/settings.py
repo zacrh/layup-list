@@ -110,7 +110,7 @@ PIPELINE = {
     'COMPILERS': (
         'react.utils.pipeline.JSXCompiler',
     ),
-    'YUGLIFY_BINARY': os.path.join(BASE_DIR, '../.heroku/vendor/node/bin/yuglify'),
+    'YUGLIFY_BINARY': os.path.join(BASE_DIR, '../.heroku/vendor/node/bin/yuglify'), # this is remarkably jank but for some reason it's the only thing that works (even after trying to add to PATH in bin/pre_compile) — post_compile runs after collectstatic so it's too late to do anything
     'JAVASCRIPT': {
         'app': {
             'source_filenames': (
