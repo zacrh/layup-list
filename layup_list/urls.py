@@ -23,6 +23,9 @@ from apps.web import views
 from apps.analytics import views as aviews
 from apps.recommendations import views as rviews
 from apps.spider import views as spider_views
+from django.views.static import serve # use this to serve static root files since whitenoise now conflicts with pipeline in production
+from django.conf import settings # for ROOT_ASSETS_DIR
+from django.conf.urls.static import static # used to serve static files in development
 
 urlpatterns = [
 
@@ -93,4 +96,18 @@ urlpatterns = [
     #     name="password_reset_confirm"),
     # re_path(r'^accounts/password/done/$', authviews.password_reset_complete,
     #     {'template_name': 'password_reset_complete.html'}),
+
+    # root files (could also copy root_files/* to /staticfiles in run_collectstatic build script for production, but this seems more explicit)
+    re_path(r"^favicon\.ico$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "favicon.ico"}),
+    re_path(r"^apple-touch-icon\.png$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "apple-touch-icon.png"}),
+    re_path(r"^tile-wide\.png$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "tile-wide.png"}),
+    re_path(r"^tile\.png$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "tile.png"}),
+    re_path(r"^robots\.txt$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "robots.txt"}),
+    re_path(r"^humans\.txt$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "humans.txt"}),
+    re_path(r"^browserconfig\.xml$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "browserconfig.xml"}),
+    re_path(r"^crossdomain\.xml$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "crossdomain.xml"}),
 ]
+
+# serve static files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
