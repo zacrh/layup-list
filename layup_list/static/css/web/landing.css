@@ -6,3 +6,7 @@
     padding-top: 10%;
     width: 80px;
 }
+
+.light-btn-outline {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+}

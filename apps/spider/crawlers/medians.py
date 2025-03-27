@@ -1,5 +1,7 @@
 import sys
-import urllib2
+import urllib.request
+import urllib.parse
+import functools
 from bs4 import BeautifulSoup
 
 from apps.web.models import Course, CourseMedian
@@ -25,7 +27,7 @@ def crawl_median_page_urls():
 
 def _retrieve_term_medians_urls_from_soup(soup):
     return [
-        urllib2.urlparse.urljoin("http://www.dartmouth.edu", a["href"])
+        urllib.parse.urljoin("http://www.dartmouth.edu", a["href"])
         for a in soup.find_all("a", href=True)
         if _is_term_page_url(a["href"])
     ]
@@ -41,7 +43,7 @@ def crawl_term_medians_for_url(url):
     table_rows = soup.find("table").find("tbody").find_all("tr")
     medians = [
         _convert_table_row_to_dict(table_row) for table_row in table_rows]
-    medians.sort(cmp=_median_dict_sorter)
+    medians.sort(key=functools.cmp_to_key(_median_dict_sorter))
     return medians
 
 
@@ -103,7 +105,7 @@ def import_median(median_data):
             subnumber=median_data["course"]["subnumber"],
         )
     except Course.DoesNotExist:
-        print "Could not find course for {}".format(median_data["course"])
+        print("Could not find course for {}".format(median_data["course"]))
         return
     median, _ = CourseMedian.objects.update_or_create(
         course=course,

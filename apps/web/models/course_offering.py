@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from django.db import models
 from lib import constants
 
@@ -14,7 +13,7 @@ class CourseOfferingManager(models.Manager):
 class CourseOffering(models.Model):
     objects = CourseOfferingManager()
 
-    course = models.ForeignKey("Course")
+    course = models.ForeignKey("Course", on_delete=models.CASCADE)
     instructors = models.ManyToManyField("Instructor")
 
     term = models.CharField(max_length=4, db_index=True)
@@ -30,7 +29,7 @@ class CourseOffering(models.Model):
     class Meta:
         unique_together = ("term", "course", "section")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} {}".format(self.term, self.course.short_name())
 
     def instructors_string(self, separator=", "):

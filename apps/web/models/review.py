@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -22,8 +21,8 @@ class Review(models.Model):
         (AUTOMATED_SENTIMENT_LABELER, "Sentiment based on classifier"),
     )
 
-    course = models.ForeignKey("Course")
-    user = models.ForeignKey(User)
+    course = models.ForeignKey("Course", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     professor = models.CharField(max_length=255, db_index=True, blank=False)
     term = models.CharField(max_length=3, db_index=True, blank=False)
@@ -39,6 +38,6 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} {} {}: {}".format(
             self.course.short_name(), self.professor, self.term, self.comments)

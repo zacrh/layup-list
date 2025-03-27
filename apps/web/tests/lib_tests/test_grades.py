@@ -5,7 +5,7 @@ from lib import grades
 class GradesTestCase(TestCase):
 
     def test_numeric_value_for_grade_retrieves_single_letter_grades(self):
-        for grade, value in grades.GRADE_MAPPINGS.iteritems():
+        for grade, value in grades.GRADE_MAPPINGS.items():
             self.assertEqual(grades.numeric_value_for_grade(grade), value)
 
     def test_numeric_value_for_grade_handles_in_between_grades(self):

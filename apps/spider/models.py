@@ -48,13 +48,13 @@ class CrawledData(models.Model):
 
     resource = models.CharField(max_length=128, db_index=True, unique=True)
     data_type = models.CharField(max_length=32, choices=DATA_TYPE_CHOICES)
-    pending_data = JSONField()
-    current_data = JSONField(null=True)
+    pending_data = models.JSONField()
+    current_data = models.JSONField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "[{data_type}] {resource}".format(
             data_type=self.data_type,
             resource=self.resource,

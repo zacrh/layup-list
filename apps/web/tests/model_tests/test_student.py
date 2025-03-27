@@ -51,7 +51,7 @@ class StudentTestCase(TestCase):
         self.assertFalse(s.can_see_recommendations())
 
         # create sufficient votes of wrong type
-        for _ in xrange(constants.REC_UPVOTE_REQ):
+        for _ in range(constants.REC_UPVOTE_REQ):
             factories.VoteFactory(
                 user=s.user, category=Vote.CATEGORIES.DIFFICULTY, value=1)
             for value in [-1, 0]:
@@ -62,7 +62,7 @@ class StudentTestCase(TestCase):
         # cannot view if does not reach vote count
         Vote.objects.all().delete()
         factories.ReviewFactory(user=s.user)
-        for _ in xrange(constants.REC_UPVOTE_REQ - 1):
+        for _ in range(constants.REC_UPVOTE_REQ - 1):
             factories.VoteFactory(
                 user=s.user, category=Vote.CATEGORIES.QUALITY, value=1)
             self.assertFalse(s.can_see_recommendations())

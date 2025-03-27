@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('enrollment', models.IntegerField()),
                 ('median', models.CharField(max_length=6, db_index=True)),
                 ('term', models.CharField(max_length=4, db_index=True)),
-                ('course', models.ForeignKey(to='web.Course')),
+                ('course', models.ForeignKey(to='web.Course', on_delete=models.CASCADE)),
             ],
             options={
             },

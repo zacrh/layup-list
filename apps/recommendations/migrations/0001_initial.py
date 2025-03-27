@@ -21,8 +21,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('creator', models.CharField(choices=[('docsim', 'Document Similarity')], max_length=16)),
                 ('weight', models.FloatField(null=True)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='recommendations', to='web.Course')),
-                ('recommendation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='recommenders', to='web.Course')),
+                ('course', models.ForeignKey(on_delete=models.CASCADE, related_name='recommendations', to='web.Course')),
+                ('recommendation', models.ForeignKey(on_delete=models.CASCADE, related_name='recommenders', to='web.Course')),
             ],
         ),
     ]

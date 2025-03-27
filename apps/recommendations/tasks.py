@@ -27,7 +27,7 @@ INCLUDE_REVIEWS = False  # very noisy, turn off
 @task_utils.email_if_fails
 def generate_course_description_similarity_recommendations():
     t0 = time()
-    print "loading word jumbles into memory..."
+    print("loading word jumbles into memory...")
     course_ids = []
     reverse_course_ids = {}
     course_descriptions = []
@@ -47,36 +47,36 @@ def generate_course_description_similarity_recommendations():
                 word_jumble.append(_clean_text_to_raw_words(review.comments))
         course_descriptions.append(" ".join(word_jumble))
         i += 1
-    print "finished in {}".format(time() - t0)
+    print("finished in {}".format(time() - t0))
 
     t0 = time()
-    print "fitting to count vectorizer..."
+    print("fitting to count vectorizer...")
     count_vect = CountVectorizer()
     corpus = count_vect.fit_transform(course_descriptions)
-    print "shape is {}".format(corpus.shape)
-    print "finished in {}".format(time() - t0)
+    print("shape is {}".format(corpus.shape))
+    print("finished in {}".format(time() - t0))
 
     # words -> indices
     # print count_vect.vocabulary_
 
     if PERFORM_TFIDF:
         t0 = time()
-        print "tfidf transform..."
+        print("tfidf transform...")
         tfidf_transformer = TfidfTransformer()
         corpus = tfidf_transformer.fit_transform(corpus)
-        print "shape is {}".format(corpus.shape)
-        print "finished in {}".format(time() - t0)
+        print("shape is {}".format(corpus.shape))
+        print("finished in {}".format(time() - t0))
 
     # TODO: try applying PCA, see if it improves performance
 
     t0 = time()
-    print "compute cosine similarity "
+    print("compute cosine similarity ")
     pairwise_similarity = corpus * corpus.T
-    print "shape is {}".format(pairwise_similarity.shape)
-    print "finished in {}".format(time() - t0)
+    print("shape is {}".format(pairwise_similarity.shape))
+    print("finished in {}".format(time() - t0))
 
     t0 = time()
-    print "calculating and creating recommendations..."
+    print("calculating and creating recommendations...")
     psarray = pairwise_similarity.toarray()
 
     # zero out columns corresponding to thesis, research, independent, and grad
@@ -98,7 +98,7 @@ def generate_course_description_similarity_recommendations():
     # zero out crosslistings and same titles, so only one rep for each
     # crosslisting
     covered_ids = set()
-    for i in xrange(psarray.shape[1]):
+    for i in range(psarray.shape[1]):
         if i in covered_ids:
             continue
         course_id = course_ids[i]
@@ -116,7 +116,7 @@ def generate_course_description_similarity_recommendations():
         covered_ids.add(i)
 
     recommendations_to_create = []
-    for i in xrange(psarray.shape[0]):
+    for i in range(psarray.shape[0]):
         current_class = Course.objects.get(id=course_ids[i])
 
         # zero out the diagonal
@@ -155,7 +155,7 @@ def generate_course_description_similarity_recommendations():
             creator=Recommendation.DOCUMENT_SIMILARITY).delete()
         Recommendation.objects.bulk_create(recommendations_to_create)
 
-    print "finished in {}".format(time() - t0)
+    print("finished in {}".format(time() - t0))
 
 
 def _clean_text_to_raw_words(text):

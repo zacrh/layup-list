@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('period', models.CharField(max_length=64, db_index=True)),
                 ('section', models.IntegerField()),
                 ('limit', models.IntegerField(null=True)),
-                ('course', models.ForeignKey(to='web.Course')),
+                ('course', models.ForeignKey(to='web.Course', on_delete=models.CASCADE)),
             ],
             options={
             },

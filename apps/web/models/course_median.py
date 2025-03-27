@@ -1,9 +1,8 @@
-from __future__ import unicode_literals
 from django.db import models
 
 
 class CourseMedian(models.Model):
-    course = models.ForeignKey("Course")
+    course = models.ForeignKey("Course", on_delete=models.CASCADE)
 
     section = models.IntegerField()
     enrollment = models.IntegerField()
@@ -12,7 +11,7 @@ class CourseMedian(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} {}: {}".format(
             self.term, self.course.short_name(), self.median)
 

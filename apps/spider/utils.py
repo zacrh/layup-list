@@ -1,9 +1,9 @@
 from bs4 import BeautifulSoup
-import HTMLParser
+import html
 import json
-import urllib2
+import urllib.request, urllib.parse
 
-html_parser = HTMLParser.HTMLParser()
+# no longer need to initialize html parser here since html.unescape() is a direct function in python 3
 
 DEPARTMENT_CORRECTIONS = {
     "M&SS": "QSS",
@@ -12,7 +12,7 @@ DEPARTMENT_CORRECTIONS = {
 
 
 def clean_department_code(department):
-    department = html_parser.unescape(department.strip()).upper()
+    department = html.unescape(department.strip()).upper()
     return (
         DEPARTMENT_CORRECTIONS[department]
         if department in DEPARTMENT_CORRECTIONS else department
@@ -38,5 +38,8 @@ def parse_number_and_subnumber(numbers_text):
 
 
 def retrieve_soup(url, data=None, preprocess=lambda x: x):
+    if data is not None:
+        data = data.encode("utf-8") # have to convert str to bytes in python 3
+
     return BeautifulSoup(
-        preprocess(urllib2.urlopen(url, data=data).read()), "html.parser")
+        preprocess(urllib.request.urlopen(url, data=data).read().decode("utf-8")), "html.parser")

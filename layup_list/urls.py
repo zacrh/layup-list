@@ -14,7 +14,8 @@ Including another URLconf
     2. Import the include() function: from django.conf.urls import url, include
     3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url
+# from django.conf.urls import include, url
+from django.urls import include, path, re_path
 from django.contrib import admin
 import django.contrib.auth.views as authviews
 
@@ -22,74 +23,91 @@ from apps.web import views
 from apps.analytics import views as aviews
 from apps.recommendations import views as rviews
 from apps.spider import views as spider_views
+from django.views.static import serve # use this to serve static root files since whitenoise now conflicts with pipeline in production
+from django.conf import settings # for ROOT_ASSETS_DIR
+from django.conf.urls.static import static # used to serve static files in development
 
 urlpatterns = [
 
     # administrative
-    url(r'^admin/', admin.site.urls),
-    url(r'^hijack/', include('hijack.urls')),
+    re_path(r'^admin/', admin.site.urls),
+    re_path(r'^hijack/', include('hijack.urls')),
 
     # analytics
-    url(r'^analytics/$', aviews.home, name='analytics_home'),
-    url(r'^eligible_for_recommendations/$',
+    re_path(r'^analytics/$', aviews.home, name='analytics_home'),
+    re_path(r'^eligible_for_recommendations/$',
         aviews.eligible_for_recommendations,
         name='eligible_for_recommendations'),
-    url(r'^sentiment_labeler/$',
+    re_path(r'^sentiment_labeler/$',
         aviews.sentiment_labeler,
         name='sentiment_labeler'),
 
     # spider
-    url(r'^spider/data/$',
+    re_path(r'^spider/data/$',
         spider_views.crawled_data_list,
         name="crawled_datas"),
-    url(r'^spider/data/(?P<crawled_data_pk>[0-9]+)$',
+    re_path(r'^spider/data/(?P<crawled_data_pk>[0-9]+)$',
         spider_views.crawled_data_detail,
         name="crawled_data"),
 
     # primary views
-    url(r'^$', views.landing, name="landing"),
-    url(r'^(?P<sort>best|layups)/?', views.current_term, name="current_term"),
-    url(r'^search/?', views.course_search, name="course_search"),
-    url(r'^course/(?P<course_id>[0-9]+)$',
+    re_path(r'^$', views.landing, name="landing"),
+    re_path(r'^(?P<sort>best|layups)/?', views.current_term, name="current_term"),
+    re_path(r'^search/?', views.course_search, name="course_search"),
+    re_path(r'^course/(?P<course_id>[0-9]+)$',
         views.course_detail, name="course_detail"),
-    url(r'^course/(?P<course_id>[0-9]+)/review_search/?',
+    re_path(r'^course/(?P<course_id>[0-9]+)/review_search/?',
         views.course_review_search, name="course_review_search"),
-    url(r'^departments/?', views.departments, name="departments"),
+    re_path(r'^departments/?', views.departments, name="departments"),
 
     # recommendations
-    url(r'^recommendations/?', rviews.recommendations, name='recommendations'),
+    re_path(r'^recommendations/?', rviews.recommendations, name='recommendations'),
 
     # api
-    url(r'^api/course/(?P<course_id>[0-9].*)/medians',
+    re_path(r'^api/course/(?P<course_id>[0-9].*)/medians',
         views.medians, name="medians"),
-    url(r'^api/course/(?P<course_id>[0-9].*)/professors?/?',
+    re_path(r'^api/course/(?P<course_id>[0-9].*)/professors?/?',
         views.course_professors, name="course_professors"),
-    url(r'^api/course/(?P<course_id>[0-9].*)/vote', views.vote, name="vote"),
+    re_path(r'^api/course/(?P<course_id>[0-9].*)/vote', views.vote, name="vote"),
 
     # authentication
-    url(r'^accounts/signup$', views.signup, name="signup"),
-    url(r'^accounts/login/$', views.auth_login, name="auth_login"),
-    url(r'^accounts/logout$', views.auth_logout, name="auth_logout"),
-    url(r'^accounts/confirmation$', views.confirmation, name="confirmation"),
+    re_path(r'^accounts/signup$', views.signup, name="signup"),
+    re_path(r'^accounts/login/$', views.auth_login, name="auth_login"),
+    re_path(r'^accounts/logout$', views.auth_logout, name="auth_logout"),
+    re_path(r'^accounts/confirmation$', views.confirmation, name="confirmation"),
 
     # password resets
-    url(r'^accounts/password/reset/$', authviews.password_reset,
-        {
-            'post_reset_redirect': '/accounts/password/reset/done/',
-            'template_name': 'password_reset_form.html',
-            'html_email_template_name': 'password_reset_email.html',
-            'email_template_name': 'password_reset_email.html',
-        },
-        name="password_reset"),
-    url(r'^accounts/password/reset/done/$', authviews.password_reset_done,
-        {'template_name': 'password_reset_done.html'}),
-    url(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
-        authviews.password_reset_confirm,
-        {
-            'post_reset_redirect': '/accounts/password/done/',
-            'template_name': 'password_reset_confirm.html'
-        },
-        name="password_reset_confirm"),
-    url(r'^accounts/password/done/$', authviews.password_reset_complete,
-        {'template_name': 'password_reset_complete.html'}),
+    # re_path(r'^accounts/password/reset/$', authviews.password_reset,
+    #     {
+    #         'post_reset_redirect': '/accounts/password/reset/done/',
+    #         'template_name': 'password_reset_form.html',
+    #         'html_email_template_name': 'password_reset_email.html',
+    #         'email_template_name': 'password_reset_email.html',
+    #     },
+    #     name="password_reset"),
+    # re_path(r'^accounts/password/reset/done/$', authviews.password_reset_done,
+    #     {'template_name': 'password_reset_done.html'}),
+    # re_path(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+    #     authviews.password_reset_confirm,
+    #     {
+    #         'post_reset_redirect': '/accounts/password/done/',
+    #         'template_name': 'password_reset_confirm.html'
+    #     },
+    #     name="password_reset_confirm"),
+    # re_path(r'^accounts/password/done/$', authviews.password_reset_complete,
+    #     {'template_name': 'password_reset_complete.html'}),
+
+    # root files (could also copy root_files/* to /staticfiles in run_collectstatic build script for production, but this seems more explicit)
+    re_path(r"^favicon\.ico$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "favicon.ico"}),
+    re_path(r"^apple-touch-icon\.png$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "apple-touch-icon.png"}),
+    re_path(r"^tile-wide\.png$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "tile-wide.png"}),
+    re_path(r"^tile\.png$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "tile.png"}),
+    re_path(r"^robots\.txt$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "robots.txt"}),
+    re_path(r"^humans\.txt$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "humans.txt"}),
+    re_path(r"^browserconfig\.xml$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "browserconfig.xml"}),
+    re_path(r"^crossdomain\.xml$", serve, {"document_root": settings.ROOT_ASSETS_DIR, "path": "crossdomain.xml"}),
 ]
+
+# serve static files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

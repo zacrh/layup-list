@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+# make sure node is in path
+export PATH="/layup_list/.heroku/vendor/node/bin:$PATH"
+
 indent() {
     RE="s/^/       /"
     [ $(uname) == "Darwin" ] && sed -l "$RE" || sed -u "$RE"

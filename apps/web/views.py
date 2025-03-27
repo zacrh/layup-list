@@ -14,7 +14,7 @@ from django.http import (
     HttpResponseRedirect,
     JsonResponse,
 )
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -53,7 +53,7 @@ LIMITS = {
 
 def get_session_id(request):
     if 'user_id' not in request.session:
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             request.session['user_id'] = uuid.uuid4().hex
         else:
             request.session['user_id'] = request.user.username
@@ -166,7 +166,7 @@ def current_term(request, sort):
             "Best Classes", "-quality_score", "-difficulty_score")
         vote_category = Vote.CATEGORIES.QUALITY
     else:
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return HttpResponseRedirect(
                 reverse("signup") + "?restriction=see layups")
 
@@ -190,7 +190,7 @@ def current_term(request, sort):
     except EmptyPage:
         courses = paginator.page(paginator.num_pages)
 
-    if courses.number > 1 and not request.user.is_authenticated():
+    if courses.number > 1 and not request.user.is_authenticated:
         return HttpResponseRedirect(
             reverse("signup") + "?restriction=see more")
 
@@ -228,7 +228,7 @@ def course_detail(request, course_id):
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
     form = None
-    if (request.user.is_authenticated() and
+    if (request.user.is_authenticated and
             Review.objects.user_can_write_review(request.user.id, course_id)):
         if request.method == 'POST':
             form = ReviewForm(request.POST)
@@ -250,7 +250,7 @@ def course_detail(request, course_id):
     except EmptyPage:
         reviews = paginator.page(paginator.num_pages)
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         difficulty_vote, quality_vote = Vote.objects.for_course_and_user(
             course, request.user)
     else:
@@ -339,7 +339,7 @@ def course_search(request):
 
 @require_safe
 def course_review_search(request, course_id):
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return HttpResponseRedirect(
             reverse("signup") + "?restriction=see reviews")
 
@@ -348,7 +348,7 @@ def course_review_search(request, course_id):
     reviews = course.search_reviews(query)
     review_count = reviews.count()
 
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         reviews = reviews[:LIMITS["unauthenticated_review_search"]]
 
     return render(request, 'course_review_search.html', {
@@ -385,7 +385,7 @@ def medians(request, course_id):
                     m['numeric_value'] for m in term_medians
                 ) / len(term_medians),
                 'courses': term_medians,
-            } for term, term_medians in medians_by_term.iteritems()
+            } for term, term_medians in medians_by_term.items()
         ],
         key=lambda x: numeric_value_of_term(x['term']),
         reverse=True,
@@ -407,7 +407,7 @@ def course_professors(request, course_id):
 
 @require_POST
 def vote(request, course_id):
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return HttpResponseForbidden()
 
     try:

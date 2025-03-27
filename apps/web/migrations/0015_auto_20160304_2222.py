@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import datetime
 from django.db import migrations, models
-from django.utils.timezone import utc
+from datetime import timezone # django 5 removed their timezone package since python 3 has it built in
 
 
 class Migration(migrations.Migration):
@@ -17,13 +17,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='vote',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=datetime.datetime(2016, 3, 4, 22, 22, 26, 794766, tzinfo=utc)),
+            field=models.DateTimeField(auto_now_add=True, default=datetime.datetime(2016, 3, 4, 22, 22, 26, 794766, tzinfo=timezone.utc)),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='vote',
             name='updated_at',
-            field=models.DateTimeField(auto_now=True, default=datetime.datetime(2016, 3, 4, 22, 22, 32, 906650, tzinfo=utc)),
+            field=models.DateTimeField(auto_now=True, default=datetime.datetime(2016, 3, 4, 22, 22, 32, 906650, tzinfo=timezone.utc)),
             preserve_default=False,
         ),
     ]

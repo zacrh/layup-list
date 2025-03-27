@@ -1,2 +1,2 @@
-from review_form import ReviewForm
-from signup_form import SignupForm
+from apps.web.models.forms.review_form import ReviewForm
+from apps.web.models.forms.signup_form import SignupForm

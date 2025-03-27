@@ -23,11 +23,10 @@ TIMETABLE_URL = (
 
 DATA_TO_SEND = (
     "distribradio=alldistribs&depts=no_value&periods=no_value&"
-    "distribs=no_value&distribs_i=no_value&distribs_wc=no_value&deliverymodes=no_value&pmode=public&"
+    "distribs=no_value&distribs_i=no_value&distribs_wc=no_value&distribs_lang=no_value&deliverymodes=no_value&pmode=public&" # added distribs_lang required parameter (orc returns invalid params if not passed)
     "term=&levl=&fys=n&wrt=n&pe=n&review=n&crnl=no_value&classyear=2008&"
-    "searchtype=Subject+Area%28s%29&termradio=selectterms&terms=no_value&"
+    "searchtype=Subject+Area%28s%29&termradio=selectterms&terms=no_value&terms={term}&" # terms with proper value must be right after `&terms=no_value` or else timetable will be empty
     "deliveryradio=selectdelivery&subjectradio=selectsubjects&hoursradio=allhours&sortorder=dept"
-    "&terms={term}"
 )
 
 COURSE_TITLE_REGEX = re.compile(
@@ -55,16 +54,16 @@ def crawl_timetable(term):
         preprocess=lambda x: re.sub("</tr>", "", x),
     )
     num_columns = len(soup.find(class_="data-table").find_all("th"))
-    assert num_columns == 20
+    assert num_columns == 21 # more than 20 after dartmouth added the lang requirement column
 
     tds = soup.find(class_="data-table").find_all("td")
     assert len(tds) % num_columns == 0
 
     td_generator = (td for td in tds)
-    for _ in xrange(len(tds) / num_columns):
-        tds = [next(td_generator) for _ in xrange(num_columns)]
+    for _ in range(len(tds) // num_columns): # switch to range instead of xrange and `//` instead of `/` for integer division in python 3
+        tds = [next(td_generator) for _ in range(num_columns)]
 
-        number, subnumber = parse_number_and_subnumber(tds[3].get_text())
+        number, subnumber = parse_number_and_subnumber(tds[3].get_text()) # -1 from og index
         crosslisted_courses = _parse_crosslisted_courses(
             tds[7].get_text(strip=True))
 
@@ -92,9 +91,10 @@ def crawl_timetable(term):
             "instructor": _parse_instructors(tds[12].get_text(strip=True)),
             "world_culture": tds[13].get_text(strip=True),
             "distribs": _parse_distribs(tds[14].get_text(strip=True)),
-            "limit": int_or_none(tds[15].get_text(strip=True)),
-            # "enrollment": int_or_none(tds[16].get_text(strip=True)),
-            "status": tds[17].get_text(strip=True),
+            # "langreq": tds[15].get_text(strip=True)), # language requirement, new in the timetable, haven't added to models yet
+            "limit": int_or_none(tds[16].get_text(strip=True)), # +1 from og index
+            # "enrollment": int_or_none(tds[17].get_text(strip=True)),
+            "status": tds[18].get_text(strip=True), # +1 from og index
         })
     return course_data
 

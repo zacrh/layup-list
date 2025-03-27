@@ -1,6 +1,6 @@
 from datetime import datetime
 import re
-from urllib2 import urlparse
+from urllib.parse import urlparse, urljoin
 
 from apps.web.models import Course
 from apps.spider.utils import (
@@ -11,11 +11,11 @@ from apps.spider.utils import (
 
 
 BASE_URL = "http://dartmouth.smartcatalogiq.com/"
-ORC_BASE_URL = urlparse.urljoin(BASE_URL, "/en/current/orc/")
+ORC_BASE_URL = urljoin(BASE_URL, "/en/current/orc/")
 ORC_UNDERGRAD_SUFFIX = "Departments-Programs-Undergraduate"
 ORC_GRADUATE_SUFFIX = "Departments-Programs-Graduate"
-UNDERGRAD_URL = urlparse.urljoin(ORC_BASE_URL, ORC_UNDERGRAD_SUFFIX)
-GRADUATE_URL = urlparse.urljoin(ORC_BASE_URL, ORC_GRADUATE_SUFFIX)
+UNDERGRAD_URL = urljoin(ORC_BASE_URL, ORC_UNDERGRAD_SUFFIX)
+GRADUATE_URL = urljoin(ORC_BASE_URL, ORC_GRADUATE_SUFFIX)
 INSTRUCTOR_TERM_REGEX = re.compile("^(?P<name>\w*)\s?(\((?P<term>\w*)\))?")
 
 SUPPLEMENT_URL = (
@@ -51,7 +51,7 @@ def crawl_program_urls():
 def _get_department_urls_from_url(url):
     soup = retrieve_soup(url)
     linked_urls = [
-        urlparse.urljoin(BASE_URL, a["href"])
+        urljoin(BASE_URL, a["href"])
         for a in soup.find_all("a", href=True)
     ]
     return set(
@@ -73,7 +73,7 @@ def _is_department_url(candidate_url, base_url):
 def _get_program_urls_from_department_url(url):
     soup = retrieve_soup(url)
     linked_urls = [
-        urlparse.urljoin(BASE_URL, a["href"])
+        urljoin(BASE_URL, a["href"])
         for a in soup.find_all("a", href=True)
     ]
     program_urls = set()
@@ -101,7 +101,7 @@ def _is_program_url(candidate_url, department_url):
 def crawl_courses_from_program_page_url(url, program_code):
     soup = retrieve_soup(url)
     linked_urls = [
-        urlparse.urljoin(BASE_URL, a["href"])
+        urljoin(BASE_URL, a["href"])
         for a in soup.find_all("a", href=True)
     ]
     course_urls = sorted(

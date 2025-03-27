@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Q
 from apps.web.models import Student
+from lib.utils import make_random_password # our own make_random_password method since django no longer has one after 5.1 (https://django.readthedocs.io/en/stable/releases/5.1.html#:~:text=The%20BaseUserManager.make_random_password()%20method%20is%20removed.)
 
 
 class SignupForm(forms.Form):
@@ -71,8 +72,9 @@ class SignupForm(forms.Form):
 
         new_student = Student.objects.create(
             user=new_user,
-            confirmation_link=User.objects.make_random_password(length=16)
+            confirmation_link=make_random_password(length=16) # django 5 random password generation (User.objects.make_random_password is deprecated)
         )
         new_student.send_confirmation_link(request)
 
         return new_user
+

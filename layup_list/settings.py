@@ -6,7 +6,7 @@ import sys
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = os.environ['DEBUG'] == "True"
-ALLOWED_HOSTS = ['ll-prod.herokuapp.com', '.layuplist.com'] if not DEBUG else ['0.0.0.0', 'localhost']
+ALLOWED_HOSTS = ['ll-prod.herokuapp.com', '.layuplist.com', 'layup-list-a10b5d7eb6ed.herokuapp.com'] if not DEBUG else ['0.0.0.0', 'localhost']
 AUTO_IMPORT_CRAWLED_DATA = os.environ.get('AUTO_IMPORT_CRAWLED_DATA') == "True"
 
 INSTALLED_APPS = [
@@ -20,9 +20,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'pipeline',
     'crispy_forms',
+    'crispy_bootstrap5',
     'hijack',
-    'compat',
-    'hijack_admin',
     'django_celery_beat',
     'django_celery_results',
     'apps.analytics',
@@ -31,16 +30,17 @@ INSTALLED_APPS = [
     'apps.web',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # add whitenoise to middleware (correct whitenoise configuration in django 5)
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'hijack.middleware.HijackUserMiddleware', # add hijack middleware; now required in django hijack 3.7+
 ]
 
 ROOT_URLCONF = 'layup_list.urls'
@@ -84,26 +84,38 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# Crispy Forms configuration (necessary when using bootstrap5)
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 # Static files
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), ROOT_ASSETS_DIR)
+STORAGES = { # STATICFILES_STORAGE was fully deprecated in django v5.1, with this being the documentation's new recommended way to configure storage. (django-pipeline's documentation is outdated and still says to use STATICFILES_STORAGE; there's an open issue about this with updated instructions: https://github.com/jazzband/django-pipeline/issues/831)
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage', # Django's default is 'django.core.files.storage.FileSystemStorage'
+    },
+    'staticfiles': {
+        'BACKEND': 'pipeline.storage.PipelineManifestStorage',
+    },
+}
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'pipeline.finders.PipelineFinder',
 )
-ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
 PIPELINE = {
     'COMPILERS': (
         'react.utils.pipeline.JSXCompiler',
     ),
+    'YUGLIFY_BINARY': os.path.join(BASE_DIR, '../.heroku/vendor/node/bin/yuglify'), # this is remarkably jank but for some reason it's the only thing that works (even after trying to add to PATH in bin/pre_compile) — post_compile runs after collectstatic so it's too late to do anything
     'JAVASCRIPT': {
         'app': {
             'source_filenames': (
                 'js/plugins.js',
-                'js/vendor/jquery.highlight-5.js',
+                'js/vendor/jquery.highlight.js',
                 'js/web/base.jsx',
                 'js/web/common.jsx',
                 'js/web/landing.jsx',

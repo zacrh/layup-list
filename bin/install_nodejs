@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-NODE_VERSION=0.12.7
+NODE_VERSION=18.20.7
 NODE_BASENAME=node-v${NODE_VERSION}-linux-x64
 NODE_ARCHIVE="http://nodejs.org/dist/v${NODE_VERSION}/${NODE_BASENAME}.tar.gz"
 
@@ -21,6 +21,12 @@ pushd $BUILD_DIR/.heroku/vendor
 rm -rf node
 mv $tempdir/$NODE_BASENAME node
 popd
+
+# make sure bin exists before we create a symlink — need to do this since we're in pre_compile so bin hasn't been created unless it's been cached (when we don't add this, builds will not work after updating requirements.txt)
+mkdir -p "$BUILD_DIR/.heroku/python/bin"
+
+# update node paths
+export PATH="$BUILD_DIR/.heroku/vendor/node/bin:$PATH"
 
 ln -s -f ../../vendor/node/bin/node .heroku/python/bin/node
 ln -s -f ../../vendor/node/bin/node-waf .heroku/python/bin/node-waf
