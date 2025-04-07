@@ -109,6 +109,23 @@ def auth_login(request):
                         "first.")
                 })
         else:
+            # Check if user is affected by email outage — can't do this in the above else block since that isn't fired (for some reason `authenticate` for non-activated users returns None instead of the user)
+            user = User.objects.filter(username=username).first()
+            if user:
+                emails_fixed_at = datetime.datetime.fromisoformat("2025-04-02 14:51:41.666898+00") # when emails were fixed (not resending links for ppl who signed up after since they got their conf link)
+                if not user.is_active and user.last_name != "RESENT_CONFIRMATION" and user.date_joined < emails_fixed_at:
+                    user.last_name = "RESENT_CONFIRMATION"
+                    user.save()
+                    # resend confirmation link
+                    student = Student.objects.get(user=user)
+                    student.send_confirmation_link(request)
+                    return render(request, 'login.html', {
+                        "error": (
+                            "We sent a new confirmation link to your email. "
+                            "Check your inbox (and spam) and follow the instructions to activate your account."
+                        )
+                    })
+                # else: User has already resent confirmation (after emails have started working again). We do not resend confirmation link.
             return render(request, 'login.html', {"error": "Invalid login."})
     elif request.method == 'GET':
         return render(request, 'login.html')
@@ -143,6 +160,7 @@ def confirmation(request):
             })
 
         student.user.is_active = True
+        student.user.last_name = "" # remove "RESENT_CONFIRMATION" if it exists
         student.user.save()
         return render(request, 'confirmation.html', {
             'already_confirmed': False
