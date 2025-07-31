@@ -14,6 +14,7 @@ department_code_to_name = {
     "COGS": "Cognitive Science",
     "COLT": "Comparative Literature",
     "COSC": "Computer Science",
+    "CSDA": "Digital Arts",
     "EARS": "Earth Sciences",
     "ECON": "Economics",
     "EDUC": "Education",
