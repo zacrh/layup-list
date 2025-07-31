@@ -59,6 +59,7 @@ urlpatterns = [
     re_path(r'^course/(?P<course_id>[0-9]+)/review_search/?',
         views.course_review_search, name="course_review_search"),
     re_path(r'^departments/?', views.departments, name="departments"),
+    re_path(r'^professors/?', views.instructors, name="instructors"),
 
     # recommendations
     re_path(r'^recommendations/?', rviews.recommendations, name='recommendations'),

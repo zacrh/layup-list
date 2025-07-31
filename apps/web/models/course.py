@@ -36,8 +36,14 @@ class CourseManager(models.Manager):
             return self.none()
         elif len(department_or_query) not in self.DEPARTMENT_LENGTHS:
             # must be query, too long to be department. ignore numbers we may
-            # have. e.g. "Introduction"
-            return Course.objects.filter(title__icontains=department_or_query)
+            # have. Could be course title or instructor name.
+            # e.g. "Introduction" or "John Smith"
+            
+            return Course.objects.filter(
+                Q(title__icontains=department_or_query) |
+                Q(courseoffering__instructors__name__icontains=department_or_query)
+            ).distinct()
+                
         elif number and subnumber:
             # course with number and subnumber
             # e.g. COSC 089.01
@@ -61,7 +67,9 @@ class CourseManager(models.Manager):
             ).order_by("number", "subnumber")
             if len(courses) == 0:
                 return Course.objects.filter(
-                    title__icontains=department_or_query)
+                    Q(title__icontains=department_or_query) |
+                    Q(courseoffering__instructors__name__icontains=department_or_query)
+                ).distinct()
             return courses
 
 
