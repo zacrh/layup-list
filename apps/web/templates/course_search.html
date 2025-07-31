@@ -2,6 +2,10 @@
 {% block title %}
 {% if department %}
     {{ department }}
+{% elif instructor_full_name %}
+    Instructor: {{ instructor_full_name }}
+{% elif instructor_search %}
+    Instructor: "{{ query }}"
 {% else %}
     "{{ query }}"
 {% endif %}
@@ -11,8 +15,15 @@
     <div class="col-md-12">
         {% if department %}
             <h1> {{ department }}</h1>
+        {% elif instructor_full_name %}
+            <h1> Courses taught by {{ instructor_full_name }} </h1>
         {% else %}
             <h1> Search Results For "{{ query }}" </h1>
+            {% if instructor_search %}
+                <p class="text-muted">Professors: 
+                {% for instructor in instructor_search %}<a href="?q={{ instructor|urlencode }}" class="link-primary link-offset-1 link-underline-opacity-0 link-underline-opacity-75-hover">{{ instructor }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                </p>
+            {% endif %}
         {% endif %}
     </div>
 </div>
@@ -37,11 +48,22 @@
         </thead>
         <tbody>
             {% for course in courses %}
-            <tr onclick="window.document.location='{% url 'course_detail' course.id %}';" role="button">
-                <td> <a class="link-primary text-primary-emphasis link-offset-1 link-underline-opacity-0 link-underline-opacity-75-hover">{{ course }}</a> </td>
+            {% if instructor_full_name %}
+                <tr onclick="window.document.location='{% url 'course_review_search' course.id %}?q={{ instructor_full_name|default:query|urlencode }}';" role="button">
+                    <td> <a class="link-primary text-primary-emphasis link-offset-1 link-underline-opacity-0 link-underline-opacity-75-hover">{{ course }}</a> </td>
+            {% else %}
+                <tr onclick="window.document.location='{% url 'course_detail' course.id %}';" role="button">
+                    <td> <a class="link-primary text-primary-emphasis link-offset-1 link-underline-opacity-0 link-underline-opacity-75-hover">{{ course }}</a> </td>
+            {% endif %}
                 <td> {% if course.prefetched_is_offered %} Offered {{term}} {% endif %} </td>
                 <td> {{ course.distribs_string }} </td>
-                <td> {{ course.review_set.count }} </td>
+                <td> 
+                {% if instructor_full_name and course.instructor_specific_review_count is not None %}
+                    {{ course.instructor_specific_review_count }}
+                {% else %}
+                    {{ course.review_set.count }}
+                {% endif %}
+                </td>
                 <td> {{ course.quality_score }} </td>
                 <td>
                     {% if request.user.is_authenticated %}

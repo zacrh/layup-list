@@ -3,7 +3,10 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h1> Departments </h1>
+        <div class="d-flex flex-column">
+            <h1> Departments </h1>
+            <p><a href="{% url 'instructors' %}">Browse by Professor</a></p>
+        </div>
         <table class="table table-hover">
             <thead>
                 <th>Code</th>

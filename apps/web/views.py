@@ -35,6 +35,7 @@ from apps.web.models.forms import ReviewForm, SignupForm
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
 from lib.departments import get_department_name
+from lib.instructors import get_instructor_name
 from lib import constants
 
 import uuid
@@ -317,6 +318,23 @@ def departments(request):
 
 
 @require_safe
+def instructors(request):
+    instructor_ids_and_counts = (
+        Instructor.objects.filter(courseoffering__course__number__lt=100)  # Undergraduate courses
+                          .exclude(courseoffering__course__department='RAD')
+                          .values('id', 'name')
+                          .annotate(course_count=Count('courseoffering__course', distinct=True))
+                          .order_by('name')
+                          .values_list('id', 'name', 'course_count'))
+    return render(request, 'instructors.html', {
+        'instructors': [
+            (instructor_id, name, count)
+            for instructor_id, name, count in instructor_ids_and_counts
+        ],
+    })
+
+
+@require_safe
 def course_search(request):
     query = request.GET.get("q", "").strip()
     if len(query) < 3:
@@ -326,18 +344,65 @@ def course_search(request):
         })
     courses = Course.objects.search(query).prefetch_related(
         'review_set', 'courseoffering_set', 'distribs')
+    
+    instructor_search = None
+    instructor_full_name = None
+    if not get_department_name(query.upper()):
+        matching_instructors = Instructor.objects.filter(
+            name__icontains=query
+        )
+        if matching_instructors.exists():
+            instructor_names = list(matching_instructors.values_list('name', flat=True))
+            instructor_search = instructor_names
+            
+            if len(instructor_names) == 1 and len(query) >= 3:
+                instructor_name = instructor_names[0]
+                query_words = query.lower().split()
+                instructor_words = instructor_name.lower().split()
+                
+                word_match_found = False
+                for query_word in query_words:
+                    if len(query_word) >= 3:
+                        for instructor_word in instructor_words:
+                            if query_word == instructor_word:
+                                word_match_found = True
+                                break
+                        if word_match_found:
+                            break
+                
+                if word_match_found:
+                    instructor_full_name = instructor_name
+    
+    # if we don't have an exact instructor match, exclude instructor-taught courses
+    # as they can pollute results
+    if not instructor_full_name and instructor_search:
+        courses = courses.filter(title__icontains=query)
     if len(courses) == 1:
         return redirect(courses[0])
 
-    if len(query) not in Course.objects.DEPARTMENT_LENGTHS:
+    if not get_department_name(query.upper()):
         courses = sorted(
             courses, key=lambda c: c.review_set.count(), reverse=True)
-
+    
+    # show review counts for professor if we have an exact instructor match
+    courses_with_instructor_reviews = []
+    for course in courses:
+        if instructor_full_name:
+            instructor_review_count = course.review_set.filter(
+                professor__icontains=instructor_full_name
+            ).count()
+            course.instructor_specific_review_count = instructor_review_count
+        else:
+            course.instructor_specific_review_count = None
+        courses_with_instructor_reviews.append(course)
+    
     return render(request, 'course_search.html', {
         'term': constants.CURRENT_TERM,
         'query': query,
         'department': get_department_name(query),
-        'courses': courses,
+        'instructor_search': instructor_search,
+        'instructor_full_name': instructor_full_name,
+        'courses': courses_with_instructor_reviews,
     })
 
 
